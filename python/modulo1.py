@@ -1,0 +1,66 @@
+import random
+import sys
+import time
+
+#lc lista cuadrícula
+def dibuja_cuadricula(lc):
+    print('\n')
+    print('___________________________                    ')
+    print('                         ''                    ')
+    print('     {}     {}     {}    ''    1     2     3   '.format(lc[0],lc[1],lc[2]))
+    print('                         ''                    ')
+    print('     {}     {}     {}    ''    4     5     6   '.format(lc[3],lc[4],lc[5]))
+    print('                         ''                    ')
+    print('     {}     {}     {}    ''    7     8     9   '.format(lc[6],lc[7],lc[8]))
+    print('__________________________                   ')
+
+def devuelve_numero_random(cero, ocho):
+    return random.randint(cero, ocho)
+
+def juega_el_jugador(lista_inputs, lista_cuadricula):
+    tirada = ''
+
+    while tirada not in lista_inputs:
+        tirada = str(input('Turno Jugador: Elige una casilla (1 al 9)'))
+
+    if tirada == 's' or tirada == 'S':
+        sys.exit()
+
+    tirada = int(tirada)
+    if lista_cuadricula[tirada - 1] == '_':
+        lista_cuadricula[tirada - 1] = 'X'
+        #false es que le toca a la máquina
+        return False
+    else:
+        print('Casilla ocupada')
+        time.sleep(1)
+        return True
+
+
+
+def juega_cpu_random(tirada_random, lista_cuadricula):
+    if lista_cuadricula[tirada_random] == '_':
+        lista_cuadricula[tirada_random] = 'O'
+        return True
+
+    return False
+
+def checkear_3enraya(lista_check3raya, lista_cuadricula, xo):
+    for i in lista_check3raya:
+        if lista_cuadricula[i[0]] == xo and lista_cuadricula[i[1]] == xo and lista_cuadricula[i[2]] == xo:
+            return True
+
+    return False
+"""
+def check_empate(vacia, lista_cuadricula):
+    for i in lista_cuadricula:
+        if i == '_':
+            return False
+
+    return True
+"""
+def check_empate(vacia, lista_cuadricula):
+    if vacia not in lista_cuadricula:
+        return True
+    return False
+
