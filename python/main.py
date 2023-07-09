@@ -61,8 +61,14 @@ while not empate:
     else:
         print("CPU tirando...")
         time.sleep(1)
-        tirada_random=ra1.devuelve_numero_random(0,8)
-        turno=ra1.juega_cpu_random(tirada_random,lista_cuadricula)
+        cpu_3enraya=ra1.cpu_intenta_3_en_raya(lista_check3raya, lista_cuadricula)
+        if not cpu_3enraya:
+            turno=ra1.cpu_defiende(lista_check3raya, lista_cuadricula)
+            if not turno:
+                tirada_random=ra1.devuelve_numero_random(0,8)
+                turno=ra1.juega_cpu_random(tirada_random,lista_cuadricula)
+       
+
 
 
 

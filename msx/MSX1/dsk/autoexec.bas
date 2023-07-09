@@ -1,1 +1,1 @@
-10 run "game.bas"
+10 run "main.bas"

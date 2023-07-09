@@ -36,6 +36,26 @@ def juega_el_jugador(lista_inputs, lista_cuadricula):
         time.sleep(1)
         return True
 
+def cpu_intenta_3_en_raya(lista_check3raya, lista_cuadricula):
+    for i in range(9):
+        if lista_cuadricula[i] == '_':
+            lista_cuadricula[i] = 'O'
+            for check in lista_check3raya:
+               if lista_cuadricula[check[0]] == 'O' or lista_cuadricula[check[1]] == 'O' or lista_cuadricula[check[2]] == 'O':
+                   return True
+            lista_cuadricula[i]='_'
+    return False
+
+def cpu_defiende(lista_check3raya, lista_cuadricula):
+    for i in range(9):
+        if lista_cuadricula[i] == '_':
+            lista_cuadricula[i] = 'X'
+            for check in lista_check3raya:
+                if lista_cuadricula[check[0]] == 'X' or lista_cuadricula[check[1]] == 'X' or lista_cuadricula[check[2]] == 'X':
+                    return True
+            lista_cuadricula[i]='_'
+    return False
+
 
 
 def juega_cpu_random(tirada_random, lista_cuadricula):
