@@ -10,8 +10,8 @@
 #include "utils.c"
 /**Declarations*/
 void draw_board(void);
-void inicilize(void);
 char play_player();
+char play_player2();
 char play_cpu(void);
 void terminar_programa(void);
 char generate_random_number(char a, char b);
@@ -30,75 +30,99 @@ char allowed[8][3]={
   {2,4,6}
 };
 //0 tira el jugador
-char tirada;
+char turn;
+char count_win_player;
+char count_win_cpu_or_player2;
+char count_tied;
 char game_over;
+char number_players;
 /*Definitons*/
 void main(void) 
 {
+  /**
+   * New game
+   * 
+   */
 game_over:
   SetColors(15,1,1);
-  Locate(8,0);
-  Print(" 3 en Raya");
-  inicilize();
-
+  FunctionKeys(0);
+  count_win_player=0;
+  count_win_cpu_or_player2=0;
+  count_tied=0;
+  number_players=0;
+  //mostramos el menú de bienvenida
   show_menu();
- 
-  while(game_over==0){
-
-    if(tirada==0){
-      tirada=play_player();
-    }else{
-      tirada=play_cpu();
-    }
-
-    draw_board();
-    if(check_3_en_raya('X')==1){
-      Locate(0,0);
-      printf("Jugador ganaste, pulse una tecla para continuar");
-      WaitKey();
-      goto game_over;
-    }else if(check_3_en_raya('O')==1){
-      Locate(0,0);
-      printf("Cpu gana, pulse una tecla para continuar");
-      WaitKey();
-      goto game_over;
-    }
-    else if(check_empate()==0){
-      Locate(0,0);
-      printf("Empate, pulse una tecla para continuar");
-      WaitKey();
-      goto game_over;
-    }
-  }
-  
-}
-void inicilize(void){
+  /**
+   * New Screen
+   */
+new_screen:
+  game_over=0;
+  //Inicializamos el array
   for(char i=0;i<9;i++){
       board[i]='_';
   }
   if(generate_random_number(0,9)>6)
-    tirada=0;
+    turn=0;
   else
-    tirada=1;
+    turn=1;
 
-  game_over=0;
+  /*
+  *Main loop
+  */
+  while(game_over==0){
+    draw_board();
+    if(check_3_en_raya('X')==1){
+      Locate(0,17);
+      printf("Player win!!");
+      count_win_player++;
+      WaitKey();
+      goto new_screen;
+    }else if(check_3_en_raya('O')==1){
+      Locate(0,17);
+      if(number_players==1)
+        printf("MSX win!!");
+      else 
+        printf("Plaer 2 win!!");
+      count_win_cpu_or_player2++;
+      WaitKey();
+      goto new_screen;
+    }
+    else if(check_empate()==0){
+      Locate(0,17);
+      printf("Tied!!");
+      WaitKey();
+      goto new_screen;
+    }
+    if(turn==0){
+      turn=play_player();
+    }else{
+      if(number_players==1)
+        turn=play_cpu();
+      else
+        turn=play_player2();
+    }
+  }//fin del while(game_over)
+  goto game_over;
 }
- 
+
 void draw_board(void){
   Cls();
   HideDisplay();
   printf("\n");
-  printf("\n");
+  if (number_players==1)printf("       Player: %d MSX: %d Tied: %d ",count_win_player,count_win_cpu_or_player2,count_tied);
+  else printf("       Player: %d Player 2: %d Tied: %d ",count_win_player,count_win_cpu_or_player2,count_tied);
   printf("\n");
   printf("\n\r");
-  printf("  ________________\n\r");
-  printf(" |                |\n\r");
-  printf(" |  %c   %c   %c     | 1 2 3\n\r", board[0], board[1], board[2]);
-  printf(" |                |\n\r");
-  printf(" |  %c   %c   %c     | 4 5 6\n\r", board[3], board[4], board[5]);
-  printf(" |                |\n\r");
-  printf(" |  %c   %c   %c     | 7 8 9\n\r", board[6], board[7], board[8]);
-  printf(" |________________|\n\r");
+  printf("           _____________\n\r");
+  printf("          |             |\n\r");
+  printf("          |  %c   %c   %c  | 1 2 3\n\r", board[0], board[1], board[2]);
+  printf("          |             |\n\r");
+  printf("          |  %c   %c   %c  | 4 5 6\n\r", board[3], board[4], board[5]);
+  printf("          |             |\n\r");
+  printf("          |  %c   %c   %c  | 7 8 9\n\r", board[6], board[7], board[8]);
+  printf("          |_____________|\n\r");
+  Locate(4,20);
+  printf("Remember escape to exit"); 
   ShowDisplay();
 }
 
@@ -106,43 +130,95 @@ void draw_board(void){
 char play_player(){
     char lugar_elegido =0;
     char key=0;
+    KillKeyBuffer();
     //while (lugar_elegido <48 || lugar_elegido>57){
-    while (key <'0' || key>'9'){
-        Locate(0,20);
-        Print("Turno Jugador: pulsa del 1 al 9): ");
+    while ( key <'0' || key>'9' ){
+        Locate(0,17);
+        Print("Player turn");
         key=WaitKey();
+        if(key==27){
+          game_over=1;
+          return 0;
+        }
         lugar_elegido=get_number_from_char(key);
     }
-    if (key == 's' || key == 'S'){
-      terminar_programa();
-    }
-
-
-
-
+    //hay que restarle 1 porque así funcionan los arrays
     if (board[lugar_elegido - 1] == '_'){
-      board[lugar_elegido - 1] = 'X';
-      //1 es que le toca a la máquina
-      
+      board[lugar_elegido - 1] = 'X';      
     }else{
       //Vuelve a tirar el player ya que estaba ocupado ese lugar
-      Locate(0,0);
+      Locate(0,15);
       printf("El %d estaba ocupado",lugar_elegido);
       play_player();
-
     }
   return 1;
 }
 
-char play_cpu(void){
-  char tirada_cpu=generate_random_number(0,9);
-  Locate(0,20);
-  printf("Turno CPU...%d",tirada_cpu);
-  for(long i=0;i<10000;i++);
+char play_player2(){
+    char lugar_elegido =0;
+    char key=0;
+    KillKeyBuffer();
+    //while (lugar_elegido <48 || lugar_elegido>57){
+    while ( key <'0' || key>'9' ){
+        Locate(0,17);
+        Print("Player 2 turn");
+        key=WaitKey();
+        if(key==27){
+          game_over=1;
+          return 0;
+        }
+        lugar_elegido=get_number_from_char(key);
+    }
+    //hay que restarle 1 porque así funcionan los arrays
+    if (board[lugar_elegido - 1] == '_'){
+      board[lugar_elegido - 1] = 'O';      
+    }else{
+      //Vuelve a tirar el player ya que estaba ocupado ese lugar
+      Locate(0,15);
+      printf("El %d estaba ocupado",lugar_elegido);
+      play_player();
+    }
+  return 0;
+}
 
+char play_cpu(void){
+  Locate(0,17);
+  printf("MSX Turn ...");
+  //Pausa
+  for(long i=0;i<15000;i++);
+  //MSX intenta 3 en raya
+  for(char i=0;i<9;i++){
+    if(board[i]=='_'){
+      board[i]='O';
+      for (char check=0;check<9;check++){
+        if(board[allowed[check][0]]=='O' && board[allowed[check][1]]=='O' && board[allowed[check][2]]=='O'){
+          return 0;
+        }
+      }
+      board[i]='_';
+    }
+  }
+
+  //MSX defiende
+  for(char i=0;i<9;i++){
+    if(board[i]=='_'){
+      board[i]='X';
+      for (char check=0;check<9;check++){
+        if(board[allowed[check][0]]=='X' && board[allowed[check][1]]=='X' && board[allowed[check][2]]=='X'){
+          board[i]='O';
+          return 0;
+        }
+      }
+      board[i]='_';
+    }
+  }
+
+
+  //MSX tira aleatoriamente
+  char tirada_cpu=generate_random_number(0,9);
   if(board[tirada_cpu]=='_'){
     board[tirada_cpu]='O';
-    //Ahora tira el player (0)
+    return 0;
   }else{
     play_cpu();
   }
@@ -196,12 +272,23 @@ char check_empate(){
 void show_menu(void){
   Cls();
   char k=0;
-  Locate(10,10);
-  //PutText(100,100,"1. Jugar",0);
-  Locate(12,10);
-  printf("1. Jugar\n\n\n\r");  
-  while(k!=49){
+  Locate(13,0);
+  printf("Tictactoe");  
+  Locate(13,2);
+  printf("MSX Spain");  
+  Locate(4,10);
+  printf("Press 1 player <> MSX");  
+  Locate(4,12);
+  printf("Press 2 player1 <> player2");  
+  Locate(4,15);
+  printf("Remember escape to exit"); 
+  while(k!=49 && k!=50){
     k=Inkey();
+    if(k==27)terminar_programa();
+    if(k==49)
+      number_players=1;
+    else
+      number_players=2;
   }
 }
 

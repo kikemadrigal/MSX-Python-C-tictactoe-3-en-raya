@@ -79,10 +79,10 @@ rem tasklist | find /i "%MyProcess%">nul  && (echo %MyProcess% Already running) 
 
 
 
-rem if exist %program% del /f /Q %program%
-copy tools\Disk-Manager\disco.dsk .\disco.dsk
-for /R dsk/ %%a in (*.*) do (
-    start /wait tools\Disk-Manager\DISKMGR.exe -A -F -C disco.dsk "%%a")   
+rem rem if exist %program% del /f /Q %program%
+rem copy tools\Disk-Manager\disco.dsk .\disco.dsk
+rem for /R dsk/ %%a in (*.*) do (
+rem     start /wait tools\Disk-Manager\DISKMGR.exe -A -F -C disco.dsk "%%a")   
 
 
 
