@@ -115,6 +115,7 @@
     2030 IF k$<"0" OR k$>"9" OR k$="" THEN GOTO 2000
     1' a la tecla pulsa la converimos en entero y espués le restamos 1 (porque así trabajan los arrays)
     2040 se=VAL(k$):se=se-1
+    2041 'locate 0,0:print se:gosub 600
     2050 if c$(se)="_" then c$(se)="X" else locate 0,15:print "Ocupada, prueba otra vez":for i=0 to 500: next i:locate 0,15:print "                          ":goto 2000
     1 'Ponemos que ahora es el turno del MSX'
     2060 tu=1

@@ -3,99 +3,83 @@ import modulo1 as ra1
 import os
 import time
 
-lista_cuadricula = ['_']*9
-lista_check3raya=[
-    (0,1,2),
-    (3,4,5),
-    (6,7,8),
-    (0,3,6),
-    (1,4,7),
-    (2,5,8),
-    (0,4,8),
-    (6,4,2)
-]
-lista_inputs=['1','2','3','4','5','6','7','8','9','s','S']
 
-#ra1.dibuja_cuadricula(lista_cuadricula)
-
-vacia='_'
 ganadas=0
 perdidas=0
 empates=0
-juador_3enraya=False
-cpu_3enraya=False
-empate=False
+salir=False
 turno=False
-numero_tirada=0
+jugador_3enraya = False
+cpu_3enraya = False
 
-turno=ra1.devuelve_numero_random(0,9)
-if turno<5:
-    turno=True
-else:
-    turno=False
+while not salir:
 
-while not empate:
-#while numero_tirada<9:
-    numero_tirada+=1
-    os.system('cls')
-    ra1.dibuja_cuadricula(lista_cuadricula)
-    jugador_3enraya = ra1.checkear_3enraya(lista_check3raya, lista_cuadricula, 'X')
-    cpu_3enraya = ra1.checkear_3enraya(lista_check3raya, lista_cuadricula, 'O')
-    empate = ra1.check_empate(vacia, lista_cuadricula)
+    lista_cuadricula = ['_']*9
+    lista_check3raya=[
+        (0,1,2),
+        (3,4,5),
+        (6,7,8),
+        (0,3,6),
+        (1,4,7),
+        (2,5,8),
+        (0,4,8),
+        (2,4,6)
+    ]
+    lista_inputs=['1','2','3','4','5','6','7','8','9','s','S']
 
-    if jugador_3enraya:
-        print('GANA Jugador!!! 3 en Raya!', jugador_3enraya, cpu_3enraya, empate)
-        break
-    elif cpu_3enraya:
-        print('GANA la CPU !!! 3 en Raya!', jugador_3enraya, cpu_3enraya, empate)
-        break
-    elif empate:
-        print('Empate! ', jugador_3enraya, cpu_3enraya, empate)
-        break
+    vacia='_'
 
+    juador_3enraya=False
+    cpu_3enraya=False
+    empate=False
+    turno=ra1.devuelve_numero_random(0,9)
 
-
-
-
-    if turno:
-        turno=ra1.juega_el_jugador(lista_inputs,lista_cuadricula)
+    if turno<5:
+        turno=True
     else:
-        print("CPU tirando...")
-        time.sleep(1)
-        cpu_3enraya=ra1.cpu_intenta_3_en_raya(lista_check3raya, lista_cuadricula)
-        if not cpu_3enraya:
-            turno=ra1.cpu_defiende(lista_check3raya, lista_cuadricula)
-            if not turno:
-                tirada_random=ra1.devuelve_numero_random(0,8)
-                turno=ra1.juega_cpu_random(tirada_random,lista_cuadricula)
-       
+        turno=False
+
+    while not empate:
+        os.system('cls')
+        ra1.marcador(ganadas, perdidas, empates)
+        ra1.dibuja_cuadricula(lista_cuadricula)
+        jugador_3enraya = ra1.checkear_3enraya(lista_check3raya, lista_cuadricula, 'X')
+        cpu_3enraya = ra1.checkear_3enraya(lista_check3raya, lista_cuadricula, 'O')
+        empate = ra1.check_empate(vacia, lista_cuadricula)
+
+        if jugador_3enraya:
+            print('GANA Jugador!!! 3 en Raya!')
+            ganadas += 1
+            break
+        elif cpu_3enraya:
+            print('GANA la CPU !!! 3 en Raya!')
+            perdidas += 1
+            break
+        elif empate:
+            print('Empate! ')
+            empates += 1
+            break
 
 
 
 
 
-    """
-    os.system('cls')
-    jugador_3enraya = ra1.checkear_3enraya(lista_check3raya, lista_cuadricula, 'X')
-    cpu_3enraya = ra1.checkear_3enraya(lista_check3raya, lista_cuadricula, 'O')
-    empate = ra1.checkear_empate(vacia, lista_cuadricula)
+        if turno:
+            turno=ra1.juega_el_jugador(lista_inputs,lista_cuadricula)
+        else:
 
-    if jugador_3enraya:
-        print('GANA Jugador!!! 3 en Raya!', jugador_3enraya, cpu_3enraya, empate)
-        break
-    elif cpu_3enraya:
-        print('GANA la CPU !!! 3 en Raya!', jugador_3enraya, cpu_3enraya, empate)
-        break
-    elif empate:
-        print('Empate! ', jugador_3enraya, cpu_3enraya, empate)
-        break
-
-    if turno:
-        turno = ra1.juega_el_jugador(lista_inputs, lista_cuadricula)
+            cpu_3enraya=ra1.cpu_intenta_3_en_raya(lista_check3raya, lista_cuadricula)
+            if not cpu_3enraya:
+                turno=ra1.cpu_defiende(lista_check3raya, lista_cuadricula)
+                if not turno:
+                    tirada_random=ra1.devuelve_numero_random(0,8)
+                    turno=ra1.juega_cpu_random(tirada_random,lista_cuadricula)
+        
+    print('\n')
+    otra = str(input('Jugar otra vez? (S / N)'))
+    if otra == 'S' or otra == 's':
+        salir = False
     else:
-        tirada_random = ra1.devuelve_numero_random(0, 8)
-        turno = ra1.juega_cpu_random(tirada_random, lista_cuadricula)
-    """
+        salir = True
 
-print("Lista vacía")
 sys.exit()

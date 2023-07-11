@@ -14,6 +14,10 @@ def dibuja_cuadricula(lc):
     print('     {}     {}     {}    ''    7     8     9   '.format(lc[6],lc[7],lc[8]))
     print('__________________________                   ')
 
+def marcador(ganadas, perdidas, empates):
+    print('\n')
+    print('Marcador: Jugador: {}  CPU: {}  Empates: {} '.format(ganadas, perdidas, empates))
+
 def devuelve_numero_random(cero, ocho):
     return random.randint(cero, ocho)
 
@@ -21,7 +25,7 @@ def juega_el_jugador(lista_inputs, lista_cuadricula):
     tirada = ''
 
     while tirada not in lista_inputs:
-        tirada = str(input('Turno Jugador: Elige una casilla (1 al 9)'))
+        tirada = str(input('Turno Jugador: '))
 
     if tirada == 's' or tirada == 'S':
         sys.exit()
@@ -37,11 +41,13 @@ def juega_el_jugador(lista_inputs, lista_cuadricula):
         return True
 
 def cpu_intenta_3_en_raya(lista_check3raya, lista_cuadricula):
+    print("CPU tirando...")
+    time.sleep(1)
     for i in range(9):
         if lista_cuadricula[i] == '_':
             lista_cuadricula[i] = 'O'
             for check in lista_check3raya:
-               if lista_cuadricula[check[0]] == 'O' or lista_cuadricula[check[1]] == 'O' or lista_cuadricula[check[2]] == 'O':
+               if lista_cuadricula[check[0]] == 'O' and lista_cuadricula[check[1]] == 'O' and lista_cuadricula[check[2]] == 'O':
                    return True
             lista_cuadricula[i]='_'
     return False
@@ -51,7 +57,8 @@ def cpu_defiende(lista_check3raya, lista_cuadricula):
         if lista_cuadricula[i] == '_':
             lista_cuadricula[i] = 'X'
             for check in lista_check3raya:
-                if lista_cuadricula[check[0]] == 'X' or lista_cuadricula[check[1]] == 'X' or lista_cuadricula[check[2]] == 'X':
+                if lista_cuadricula[check[0]] == 'X' and lista_cuadricula[check[1]] == 'X' and lista_cuadricula[check[2]] == 'X':
+                    lista_cuadricula[i] = 'O'
                     return True
             lista_cuadricula[i]='_'
     return False
